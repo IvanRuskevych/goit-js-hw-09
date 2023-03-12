@@ -2,18 +2,25 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const formRef = document.querySelector('.form');
+const { delay, step, amount } = document.querySelector('.form').elements;
 
-let inputData = {
-  delay: null,
-  step: null,
-  amount: null,
-};
-
-formRef.addEventListener('input', getInputData);
 formRef.addEventListener('submit', onFormBtnSubmit);
 
-function getInputData(e) {
-  inputData[e.target.name] = e.target.value;
+function onFormBtnSubmit(e) {
+  e.preventDefault();
+
+  for (let i = 1; i <= Number(amount.value); i += 1) {
+    let calculatedDelay = Number(delay.value) + Number(step.value) * i;
+    console.log(calculatedDelay);
+
+    createPromise(i, calculatedDelay)
+      .then(({ position, delay }) => {
+        alertResolve(position, delay);
+      })
+      .catch(({ position, delay }) => {
+        alertReject(position, delay);
+      });
+  }
 }
 
 function createPromise(position, delay) {
@@ -29,34 +36,12 @@ function createPromise(position, delay) {
   });
 }
 
-function onFormBtnSubmit(e) {
-  e.preventDefault();
-
-  for (let i = 1; i <= inputData.amount; i += 1) {
-    let position = i;
-    let delay = Number(inputData.delay) + Number(inputData.step) * i;
-    console.log(delay);
-
-    createPromise(position, delay)
-      .then(({ position, delay }) => {
-        alertResolve(position, delay);
-        // console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-      })
-      .catch(({ position, delay }) => {
-        alertReject(position, delay);
-        // console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-      });
-  }
-}
-
 function alertResolve(paramP, paramD) {
-  // console.log(`✅ Fulfilled promise ${paramP} in ${paramD}ms`);
   Notify.init({ useIcon: false });
   Notify.success(`✅ Fulfilled promise ${paramP} in ${paramD}ms`);
 }
 
 function alertReject(paramP, paramD) {
-  // console.log(`❌ Rejected promise ${paramP} in ${paramD}ms`);
   Notify.init({ useIcon: false });
   Notify.failure(`❌ Rejected promise ${paramP} in ${paramD}ms`);
 }
