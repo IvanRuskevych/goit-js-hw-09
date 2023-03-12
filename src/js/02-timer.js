@@ -25,13 +25,10 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     selectedTime = selectedDates[0].getTime();
-    // console.log('selectedTime:', selectedTime);
-    // console.log('Date.now():', Date.now());
 
     if (Date.now() > selectedTime) {
       return alertWrongDate();
     }
-
     refs.startBtn.removeAttribute('disabled');
   },
 };
@@ -43,11 +40,8 @@ function onStartBtnClick() {
 
   setInterval(() => {
     if (selectedTime < Date.now()) {
-      selectedTime = 0;
-      alertEndCountdown(); // alert працює некоректно, не збагну як виправити ????
-      return;
+      return (selectedTime = 0);
     }
-
     updateCounter(selectedTime - Date.now());
   }, 1000);
 }
