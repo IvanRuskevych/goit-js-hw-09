@@ -40,6 +40,7 @@ function onStartBtnClick() {
 
   setInterval(() => {
     if (selectedTime < Date.now()) {
+      // alertEndCountdown();
       return (selectedTime = 0);
     }
     updateCounter(selectedTime - Date.now());

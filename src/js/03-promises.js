@@ -8,9 +8,9 @@ formRef.addEventListener('submit', onFormBtnSubmit);
 
 function onFormBtnSubmit(e) {
   e.preventDefault();
+  let calculatedDelay = Number(delay.value);
 
   for (let i = 1; i <= Number(amount.value); i += 1) {
-    let calculatedDelay = Number(delay.value) + Number(step.value) * i;
     console.log(calculatedDelay);
 
     createPromise(i, calculatedDelay)
@@ -20,6 +20,7 @@ function onFormBtnSubmit(e) {
       .catch(({ position, delay }) => {
         alertReject(position, delay);
       });
+    calculatedDelay += Number(step.value);
   }
 }
 
